@@ -39,12 +39,14 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
         let recordingName = "recordedVoice.wav"
         let pathArray = [dirPath, recordingName]
-        let filePath = URL(string: pathArray.joined(separator: "/"))
+        guard let filePath = URL(string: pathArray.joined(separator: "/")) else {
+            showError(message: "Erro ao criar um diretório para o audio.")
+        }
         
         let session = AVAudioSession.sharedInstance()
         try! session.setCategory(AVAudioSessionCategoryPlayAndRecord, with:AVAudioSessionCategoryOptions.defaultToSpeaker)
         
-        try! audioRecorder = AVAudioRecorder(url: filePath!, settings: [:])
+        try! audioRecorder = AVAudioRecorder(url: filePath, settings: [:])
         audioRecorder.delegate = self
         
         audioRecorder.isMeteringEnabled = true
@@ -64,9 +66,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         if flag {
             performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
         } else {
-            let alert = UIAlertController(title: "Erro", message: "Erro ao gravar o audio", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            present(alert, animated: true, completion: nil)
+            showError(message: "Erro ao gravar o audio.")
         }
     }
     
@@ -90,6 +90,12 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             stopRecordButton.isEnabled = false
             recordingLabel.text = "tap to record"
         }
+    }
+    
+    func showError(message: String) {
+        let alert = UIAlertController(title: "Erro!", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
 
