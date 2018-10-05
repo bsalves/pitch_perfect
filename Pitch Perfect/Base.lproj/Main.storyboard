@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="LQc-Nt-oHE">
-                                <rect key="frame" x="110" y="198" width="155" height="271.5"/>
+                                <rect key="frame" x="110" y="238" width="155" height="191.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iRI-Ot-RJs">
                                         <rect key="frame" x="0.0" y="0.0" width="155" height="155"/>
@@ -34,17 +34,6 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dOf-uq-Rvk">
-                                        <rect key="frame" x="45.5" y="207.5" width="64" height="64"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="64" id="Ltn-Od-Q81"/>
-                                            <constraint firstAttribute="width" constant="64" id="Y4P-JN-PdA"/>
-                                        </constraints>
-                                        <state key="normal" image="Stop"/>
-                                        <connections>
-                                            <action selector="stopRecording:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qww-ap-9Vl"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -59,7 +48,6 @@
                     <connections>
                         <outlet property="recordButton" destination="iRI-Ot-RJs" id="tCW-kH-NHT"/>
                         <outlet property="recordingLabel" destination="INF-2D-wbO" id="LLT-yo-3Di"/>
-                        <outlet property="stopRecordButton" destination="dOf-uq-Rvk" id="uLi-Kk-AC0"/>
                         <segue destination="teP-dd-uSw" kind="show" identifier="stopRecording" id="hiF-XH-cma"/>
                     </connections>
                 </viewController>

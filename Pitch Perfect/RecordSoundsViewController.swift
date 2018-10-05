@@ -9,20 +9,20 @@
 import UIKit
 import AVFoundation
 
-class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
+class RecordSoundsViewController: UIViewController {
     
     //MARK: - IBOutlets
     
     @IBOutlet weak var recordingLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
-    @IBOutlet weak var stopRecordButton: UIButton!
     
     //MARK: - Properties
     
     var audioRecorder: AVAudioRecorder!
+    var recording = false
     var defaultTapToRecordLabel: String!
     
-    //MARK: - Lyfecicle
+    //MARK: - Lyfecicle/Segue
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,12 +32,53 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        recording = false
+        configureUI()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "stopRecording" {
+            let playSoundsVC = segue.destination as! PlaySoundsViewController
+            let recordedAudioURL = sender as! URL
+            playSoundsVC.recordedAudioURL = recordedAudioURL
+        }
+    }
+    
+    //MARK: - UI Methods
+    
+    func configureUI() {
+        if recording {
+            recordButton.setImage(UIImage(named: "Stop"), for: .normal)
+            recordingLabel.text = "Gravando..."
+        } else {
+            recordButton.setImage(UIImage(named: "Record"), for: .normal)
+            recordingLabel.text = defaultTapToRecordLabel
+        }
+    }
+    
+    func showError(message: String) {
+        let alert = UIAlertController(title: "Erro!", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 
-    //MARK: - IBActionbs
+    //MARK: - IBActions
     
     @IBAction func record(_ sender: Any) {
-        configureUI(recording: true)
-        
+        recording = !recording
+        if recording {
+            startRecording()
+        } else {
+            stopRecording()
+        }
+        configureUI()
+    }
+    
+    //MARK: - Internal methods
+    
+    func startRecording() {
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
         let recordingName = "recordedVoice.wav"
         let pathArray = [dirPath, recordingName]
@@ -57,13 +98,16 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         audioRecorder.record()
     }
     
-    @IBAction func stopRecording(_ sender: Any) {
-        configureUI(recording: false)
-        
+    func stopRecording() {
+        configureUI()
         audioRecorder.stop()
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setActive(false)
     }
+    
+}
+
+extension RecordSoundsViewController: AVAudioRecorderDelegate {
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if flag {
@@ -73,32 +117,4 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "stopRecording" {
-            let playSoundsVC = segue.destination as! PlaySoundsViewController
-            let recordedAudioURL = sender as! URL
-            playSoundsVC.recordedAudioURL = recordedAudioURL
-        }
-    }
-    
-    //MARK: - UI Methods
-    
-    func configureUI(recording: Bool) {
-        if recording {
-            recordButton.isEnabled = false
-            stopRecordButton.isEnabled = true
-            recordingLabel.text = "Gravando..."
-        } else {
-            recordButton.isEnabled = true
-            stopRecordButton.isEnabled = false
-            recordingLabel.text = defaultTapToRecordLabel
-        }
-    }
-    
-    func showError(message: String) {
-        let alert = UIAlertController(title: "Erro!", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
-    }
 }
-
