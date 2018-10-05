@@ -6,8 +6,8 @@
 //  Copyright © 2018 Bruno Alves. All rights reserved.
 //
 
-import AVFoundation
 import UIKit
+import AVFoundation
 
 class PlaySoundsViewController: UIViewController {
     
