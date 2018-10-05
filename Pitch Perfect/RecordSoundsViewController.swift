@@ -20,11 +20,13 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     //MARK: - Properties
     
     var audioRecorder: AVAudioRecorder!
+    var defaultTapToRecordLabel: String!
     
     //MARK: - Lyfecicle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        defaultTapToRecordLabel = recordingLabel.text
     }
     
     override func didReceiveMemoryWarning() {
@@ -41,6 +43,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         let pathArray = [dirPath, recordingName]
         guard let filePath = URL(string: pathArray.joined(separator: "/")) else {
             showError(message: "Erro ao criar um diretório para o audio.")
+            return
         }
         
         let session = AVAudioSession.sharedInstance()
@@ -84,11 +87,11 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         if recording {
             recordButton.isEnabled = false
             stopRecordButton.isEnabled = true
-            recordingLabel.text = "Recording..."
+            recordingLabel.text = "Gravando..."
         } else {
             recordButton.isEnabled = true
             stopRecordButton.isEnabled = false
-            recordingLabel.text = "tap to record"
+            recordingLabel.text = defaultTapToRecordLabel
         }
     }
     
